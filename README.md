@@ -1,4 +1,4 @@
-# weather-app
+# weather-Forecast - Spring Application
 Spring Boot app that pulls data from metaweather API (url: https://www.metaweather.com/api/). Starter project which was made with purpose to familiarize myself with spring, jwt, spring data, spring security, etc. Metaweather api offers weather information for major cities. With this app you can subscribe to desidered cities and receive weather information. 
 
 ## Requirements
