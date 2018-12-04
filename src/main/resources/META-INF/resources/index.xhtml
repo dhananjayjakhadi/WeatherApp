@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>PrimeFaces Hello World Example</title>
+    <h:outputStylesheet name="/css/main.css"/>
+</h:head>
+
+<h:body>
+    <h2>Subscriptions</h2>
+    <p:dataTable id="userSubscriptions" var="us" value="#{citySubscriptionView.userSubscriptions}">
+        <p:column headerText="Created">
+            <h:outputText value="#{us.created}"/>
+        </p:column>
+
+        <p:column headerText="City_title">
+            <h:outputText value="#{us.city.title}"/>
+        </p:column>
+        <p:column headerText="City_woeid">
+            <h:outputText value="#{us.city.woeid}"/>
+        </p:column>
+        <p:column headerText="City_latt_long">
+            <h:outputText value="#{us.city.lattLong}"/>
+        </p:column>
+
+        <p:column headerText="User">
+            <h:outputText value="#{us.user.username}"/>
+        </p:column>
+
+    </p:dataTable>
+    <p:separator/>
+
+    <h:form>
+        <p:growl id="msgs" showDetail="true"/>
+
+        <h:panelGrid columns="2" cellpadding="5" style="width: 100%">
+            <p:panel header="Select a Location" style="margin-bottom:10px;">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:outputLabel for="continent" value="Continent: "/>
+                    <p:selectOneMenu id="continent" value="#{subscribeDropdownView.continent}" style="width:150px">
+                        <p:ajax listener="#{subscribeDropdownView.onContinentChange}" update="country city"/>
+                        <f:selectItem itemLabel="Select Continent" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{subscribeDropdownView.continents}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="country" value="Country: "/>
+                    <p:selectOneMenu id="country" value="#{subscribeDropdownView.country}" style="width:150px">
+                        <p:ajax listener="#{subscribeDropdownView.onCountryChange}" update="city"/>
+                        <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{subscribeDropdownView.countries}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="city" value="City: "/>
+                    <p:selectOneMenu id="city" value="#{subscribeDropdownView.city}" style="width:150px">
+                        <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{subscribeDropdownView.cities}"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <p:commandButton value="Subscribe" update="msgs userSubscriptions subscription continent country city"
+                                 actionListener="#{subscribeDropdownView.subscribe}" icon="ui-icon-check"/>
+            </p:panel>
+
+            <p:panel header="Select a subscription" style="margin-bottom:10px;">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:outputLabel for="subscription" value="Subscription: "/>
+                    <p:selectOneMenu id="subscription" value="#{unsubscribeDropdownView.city}" style="width:150px">
+                        <f:selectItem itemLabel="Select Subscription" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{unsubscribeDropdownView.subscriptions}"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+
+                <p:separator/>
+
+                <p:commandButton value="Unsubscribe" update="msgs userSubscriptions subscription continent country city"
+                                 actionListener="#{unsubscribeDropdownView.unsubscribe}" icon="ui-icon-check"/>
+            </p:panel>
+        </h:panelGrid>
+    </h:form>
+
+    <p:separator/>
+    <p:dataTable id="subscriptionWeatherInfos" var="svi" value="#{subscriptionWeatherInfoView.weatherInfos}" style="width: 100%">
+        <f:facet name="header">Weather Subscription Infos</f:facet>
+
+        <p:column headerText="City" width="9%">
+            <h:outputText value="#{svi.citySubscription.city.title}"/>
+        </p:column>
+        <p:column headerText="Time" width="9%">
+            <h:outputText value="#{svi.weatherInfo.time}"/>
+        </p:column>
+        <p:column headerText="Sunrise" width="9%">
+            <h:outputText value="#{svi.weatherInfo.sunRise}"/>
+        </p:column>
+        <p:column headerText="Sunset" width="9%">
+            <h:outputText value="#{svi.weatherInfo.sunSet}"/>
+        </p:column>
+
+
+        <p:column>
+            <p:dataTable var="cwi" value="#{svi.weatherInfo.consolidatedWeather}" width="45%">
+                <p:column headerText="Min temp">
+                    <h:outputText value="#{cwi.minTemp}"/>
+                </p:column>
+                <p:column headerText="Max temp">
+                    <h:outputText value="#{cwi.maxTemp}"/>
+                </p:column>
+                <p:column headerText="Visibility">
+                    <h:outputText value="#{cwi.visibility}"/>
+                </p:column>
+                <p:column headerText="Humidity">
+                    <h:outputText value="#{cwi.humidity}"/>
+                </p:column>
+                <p:column headerText="Air Pressure">
+                    <h:outputText value="#{cwi.airPressure}"/>
+                </p:column>
+            </p:dataTable>
+        </p:column>
+
+        <p:column>
+            <p:dataTable var="s" value="#{svi.weatherInfo.sources}" width="19%">
+                <p:column headerText="Source title">
+                    <h:outputText value="#{s.title}"/>
+                </p:column>
+                <p:column headerText="Source url">
+                    <h:outputText value="#{s.url}"/>
+                </p:column>
+            </p:dataTable>
+        </p:column>
+
+
+    </p:dataTable>
+
+    <p:separator/>
+    <h:form id="logout_form">
+        <h:commandButton action="#{login.logout}" value="Logout"/>
+    </h:form>
+
+</h:body>
+</html>
